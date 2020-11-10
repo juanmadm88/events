@@ -34,7 +34,10 @@ class EventDAO {
 
         try {
             const eventModel = await this.mapper.getEntityModel();
-            return await eventModel.find(options).exec();
+            return await eventModel
+                                    .find(options)
+                                    .select({ "event": 1, "_id": 0,"count":1,"date":1})
+                                    .exec();
         } catch(error) {
             this.logger.error(error);
             throw new Error(error);
@@ -48,6 +51,7 @@ class EventDAO {
             const eventModel = await this.mapper.getEntityModel();
             return await eventModel
                                     .findOne(options)
+                                    .select({ "count":1,"_id":0})
                                     .exec();
         } catch(error) {
             this.logger.error(error);
@@ -61,12 +65,14 @@ class EventDAO {
             return await eventModel
                                     .aggregate([{
                                                     $group: {
-                                                                _id:  "$event" ,
+                                                                _id:  "$event",
                                                                 count: {
                                                                     $sum: "$count"
                                                                 }
                                                             }
-                                            }])
+                                            }
+                                        
+                                        ])
                                     .exec();
         } catch(error) {
             this.logger.error(error);
