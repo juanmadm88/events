@@ -49,7 +49,7 @@ class EventService {
         }
     }
 
-    public buildHistogram: Function = async (filter:any): Promise<any> => {
+    public getHistogram: Function = async (filter:any): Promise<any> => {
         try {
             return await this.dao.getHistogram(filter);
         } catch (reason) {

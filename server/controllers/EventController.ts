@@ -43,6 +43,7 @@ class EventController {
 
     public countByEventName: Function = async (req: any, res: any): Promise<any> => {
         let filter:any={};
+        
         try {
             filter = this.utils.getFilter(req.params);
         } catch(error) {
@@ -70,14 +71,14 @@ class EventController {
     public buildHistogram: Function = async (req: any, res: any): Promise<any> => {
         let filter:any = {};
         let coordinates:any[]=[];
+        
         try {
             filter = this.utils.getFilter(req.params);
         } catch(error) {
             ResponseUtils.sendInvalidReq(res, error.message, 404);
         }
-        
         try {
-            const response: any = await this.service.buildHistogram(filter);
+            const response: any = await this.service.getHistogram(filter);
             coordinates = this.buildCoordinates(response[0]);
             ResponseUtils.sendQuery(res, coordinates);
         } catch (error) {
@@ -99,6 +100,7 @@ class EventController {
         }
         return coordinates;
     }
+    
     private calculateFrecuency: Function = (count:number, totalCount:number): number =>{
         return(Math.round((count/totalCount) * this.ONE_HUNDRED));
     }

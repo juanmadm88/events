@@ -94,7 +94,6 @@ class EventDAO {
             throw new Error(error);
         }
     }
-
 }
 
 export default EventDAO;
