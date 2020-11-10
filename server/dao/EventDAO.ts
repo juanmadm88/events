@@ -70,9 +70,10 @@ class EventDAO {
                                                                     $sum: "$count"
                                                                 }
                                                             }
-                                            }
+                                            },
+                                            { $project: {_id:0, event:"$_id", count:1}
                                         
-                                        ])
+                                        }])
                                     .exec();
         } catch(error) {
             this.logger.error(error);
