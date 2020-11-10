@@ -63,17 +63,9 @@ class EventDAO {
         try {
             const eventModel = await this.mapper.getEntityModel();
             return await eventModel
-                                    .aggregate([{
-                                                    $group: {
-                                                                _id:  "$event",
-                                                                count: {
-                                                                    $sum: "$count"
-                                                                }
-                                                            }
-                                            },
-                                            { $project: {_id:0, event:"$_id", count:1}
-                                        
-                                        }])
+                                    .aggregate([])
+                                    .group({_id:  "$event", count: { $sum: "$count"}})
+                                    .project({_id:0, event:"$_id", count:1})
                                     .exec();
         } catch(error) {
             this.logger.error(error);
@@ -86,31 +78,16 @@ class EventDAO {
             const options:any = this.utils.getOptions(filter);
             const eventModel = await this.mapper.getEntityModel();
             return await eventModel
-                                    .aggregate([
-                                                    
-                                                    {$match: options },
-                                                    { $group: { _id: {event: '$event', date:'$date'},
-                                                                    count: { $sum: '$count'} 
-                                                            }
-                                                    },
-                                                    { $project: { _id:0, 'results': {   event:'$_id.event', 'count': '$count', 
-                                                                                          hour: { $substr: ['$_id.date', 8, -1]},
-                                                                                          day: { $substr: ['$_id.date', 0, 8]}
-                                                                                      }
+                                    .aggregate([])
+                                    .match(options)
+                                    .group({ _id: {event: '$event', date:'$date'},count: { $sum: '$count'}})
+                                    .project({ _id:0, 'results': { event:'$_id.event', 'count': '$count', 
+                                                                    hour: { $substr: ['$_id.date', 8, -1]},
+                                                                    day: { $substr: ['$_id.date', 0, 8]}
                                                                 }
-                                                    },
-                                                    { $group: {
-                                                                '_id': null,
-                                                                totalCount: {
-                                                                    $sum: '$results.count'
-                                                                },
-                                                                results: {
-                                                                    $push: '$results'
-                                                                }
-                                                            }
-                                                    },
-                                                    { $project: {results:1, _id:0, totalCount:1}}
-                                            ])
+                                           })
+                                    .group({'_id': null,totalCount: { $sum: '$results.count'}, results: {$push: '$results'}})
+                                    .project({results:1, _id:0, totalCount:1})
                                     .exec();
         } catch(error) {
             this.logger.error(error);
