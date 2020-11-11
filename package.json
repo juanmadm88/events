@@ -30,6 +30,7 @@
         "typescript": "^3.7.5"
     },
     "scripts": {
-        "start": "node ./dist/server.js"
+        "start": "node ./dist/server.js",
+        "startdev":  "node node_modules/gulp/bin/gulp.js start-dev"
     }
 }
