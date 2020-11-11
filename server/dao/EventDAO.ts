@@ -81,6 +81,7 @@ class EventDAO {
                                     .aggregate([])
                                     .match(options)
                                     .group({ _id: {event: '$event', date:'$date'},count: { $sum: '$count'}})
+                                    .sort({'_id.date':1})
                                     .project({ _id:0, 'results': { event:'$_id.event', 'count': '$count', 
                                                                     hour: { $substr: ['$_id.date', 8, -1]},
                                                                     day: { $substr: ['$_id.date', 0, 8]}
@@ -88,7 +89,6 @@ class EventDAO {
                                            })
                                     .group({'_id': null,totalCount: { $sum: '$results.count'}, results: {$push: '$results'}})
                                     .project({results:1, _id:0, totalCount:1})
-                                    .sort({date:1})
                                     .exec();
         } catch(error) {
             this.logger.error(error);

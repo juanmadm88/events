@@ -70,7 +70,7 @@ class EventController {
 
     public buildHistogram: Function = async (req: any, res: any): Promise<any> => {
         let filter:any = {};
-        let coordinates:any={};
+        let frecuencies:number[]=[];
         
         try {
             filter = this.utils.getFilter(req.params);
@@ -79,8 +79,8 @@ class EventController {
         }
         try {
             const response: any = await this.service.getHistogram(filter);
-            coordinates = this.utils.buildCoordinates(response[0]);
-            const configuration = this.utils.buildConfiguration(coordinates);
+            frecuencies = this.utils.buildFrecuencies(response[0]);
+            const configuration = this.utils.buildConfiguration(frecuencies);
             const image = await this.canvasUtils.renderChart(configuration);
             ResponseUtils.sendFile(res, image);
         } catch (error) {

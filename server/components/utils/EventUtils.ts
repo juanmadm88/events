@@ -3,6 +3,9 @@ import Utils from './Utils';
 class EventUtils extends Utils {
 
     private readonly ONE_HUNDRED: number = 100;
+    public readonly hours:string[]=['1','2','3','4','5','6','7','8','9','10','11','12',
+                                       '13','14','15','16','17','18','19','20','21','22',
+                                       '23','24'];
 
     constructor() {
         super();
@@ -20,28 +23,38 @@ class EventUtils extends Utils {
         return filter;
     }
 
-    public buildCoordinates: Function = (response:any): any =>{
-        let coordinates:any = {hours:[],frecuencies:[]};
-        let totalCount:number;
+    public buildFrecuencies: Function = (response:any): any =>{
+        let frecuencies:number[] = [];
         
         if(this.exists(response)){
-            (response.totalCount) ? totalCount = response.totalCount : totalCount =1;
-            for(const result of response.results){
-                coordinates.hours.push(parseInt(result.hour));
-                coordinates.frecuencies.push(this.calculateFrecuency(result.count,totalCount))
+            for(const hour of this.hours){
+                let wasFound = false;
+                let index =0;
+                while ( index < response.results.length  && !wasFound) {
+                    if(hour === response.results[index].hour){
+                        wasFound = true;
+                    }else {
+                        index ++;
+                    }
+                }
+                if(wasFound){
+                    frecuencies.push(this.calculateFrecuency(response.results[index].count,response.totalCount))
+                }else{
+                    frecuencies.push(0);
+                }
             }
         }
-        return coordinates;
+        return frecuencies;
     }
 
-    public buildConfiguration: Function = (coordinates:any): any =>{
+    public buildConfiguration: Function = (frecuencies:number[]): any =>{
         return  {
             type: 'bar',
             data: {
-                labels: coordinates.hours,
+                labels: this.hours,
                 datasets: [{
                         label: 'frecuencies',
-                        data: coordinates.frecuencies,
+                        data: frecuencies,
                         borderWidth: 1
             }]},
             options: {
