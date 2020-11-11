@@ -8,7 +8,7 @@ class EventController {
     private service: EventService;
     private utils: EventUtils;
     private canvasUtils: CanvasUtils;
-    private readonly ONE_HUNDRED: number = 100;
+    
     
     constructor() {
         this.service = new EventService();
@@ -82,8 +82,8 @@ class EventController {
         }
         try {
             const response: any = await this.service.getHistogram(filter);
-            coordinates = this.buildCoordinates(response[0]);
-            const configuration = this.buildConfiguration(coordinates);
+            coordinates = this.utils.buildCoordinates(response[0]);
+            const configuration = this.utils.buildConfiguration(coordinates);
             const image = await this.canvasUtils.renderChart(configuration);
             ResponseUtils.sendFile(res, image);
         } catch (error) {
@@ -91,46 +91,8 @@ class EventController {
         }
     }
 
-    private buildCoordinates: Function = (response:any): any =>{
-        let coordinates:any = {hours:[],frecuencies:[]};
-        let totalCount:number;
-        
-        if(this.utils.exists(response)){
-            (response.totalCount) ? totalCount = response.totalCount : totalCount =1;
-            for(const result of response.results){
-                coordinates.hours.push(parseInt(result.hour));
-                coordinates.frecuencies.push(this.calculateFrecuency(result.count,totalCount))
-            }
-        }
-        return coordinates;
-    }
     
-    private buildConfiguration: Function = (coordinates:any): any =>{
-        return  {
-            type: 'bar',
-            data: {
-                labels: coordinates.hours,
-                datasets: [{
-                        label: 'frecuencies',
-                        data: coordinates.frecuencies,
-                        borderWidth: 1
-            }]},
-            options: {
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                        precision:0,
-                        beginAtZero: true
-                        }
-                    }]
-                }
-            }
-        }
-    }
-    
-    private calculateFrecuency: Function = (count:number, totalCount:number): number =>{
-        return(Math.round((count/totalCount) * this.ONE_HUNDRED));
-    }
+   
     
 }
 
