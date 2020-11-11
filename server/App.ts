@@ -3,8 +3,6 @@ import Router from './routes/Router';
 let express = require('express');
 let bodyParser = require('body-parser');
 let methodOverride = require('method-override');
-let path = require('path');
-let fs = require('fs');
 
 // Create and Configure Express.js
 class App {
