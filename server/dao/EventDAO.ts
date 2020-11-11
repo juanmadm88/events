@@ -36,6 +36,7 @@ class EventDAO {
             const eventModel = await this.mapper.getEntityModel();
             return await eventModel
                                     .find(options)
+                                    .select({_id:0, date:1, event:1,  count:1})
                                     .exec();
         } catch(error) {
             this.logger.error(error);
