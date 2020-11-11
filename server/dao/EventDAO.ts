@@ -36,7 +36,6 @@ class EventDAO {
             const eventModel = await this.mapper.getEntityModel();
             return await eventModel
                                     .find(options)
-                                    .select({ "event": 1, "_id": 0,"count":1,"date":1})
                                     .exec();
         } catch(error) {
             this.logger.error(error);
@@ -88,6 +87,7 @@ class EventDAO {
                                            })
                                     .group({'_id': null,totalCount: { $sum: '$results.count'}, results: {$push: '$results'}})
                                     .project({results:1, _id:0, totalCount:1})
+                                    .sort({date:1})
                                     .exec();
         } catch(error) {
             this.logger.error(error);

@@ -36,8 +36,7 @@ class EventController {
         }
         
         try {
-            const response: any = await this.service.get(filter);
-            const events = JSON.parse(JSON.stringify(response));
+            const events: any = await this.service.get(filter);
             ResponseUtils.sendQuery(res, events);
         } catch (error) {
             ResponseUtils.sendInternalError(res, error.message, 500);
@@ -53,9 +52,8 @@ class EventController {
             ResponseUtils.sendInvalidReq(res, error.message, 404);
         }
         try {
-            const response: any = await this.service.countByEventName(filter);
-            const events = JSON.parse(JSON.stringify(response));
-            ResponseUtils.sendQuery(res, events);
+            const count: any = await this.service.countByEventName(filter);
+            ResponseUtils.sendQuery(res, count);
         } catch (error) {
             ResponseUtils.sendInternalError(res, error.message, 500);
         }
@@ -63,8 +61,7 @@ class EventController {
 
     public getHistory: Function = async ( req:any,res: any): Promise<any> => {
         try {
-            const response: any = await this.service.getHistory();
-            const events = JSON.parse(JSON.stringify(response));
+            const events: any = await this.service.getHistory();
             ResponseUtils.sendQuery(res, events);
         } catch (error) {
             ResponseUtils.sendInternalError(res, error.message, 500);

@@ -12,8 +12,8 @@ class EventUtils extends Utils {
     public getFilter: Function = (params: any): any => {
         let filter: any = {};
 
-        if(params.startDate) filter.startDate  =  params.startDate;
-        if(params.endDate) filter.endDate =  params.endDate;
+        if(params.start_date) filter.startDate  =  params.start_date;
+        if(params.end_date) filter.endDate =  params.end_date;
         if(params.eventName) filter.event =  params.eventName;
         if(params.date) filter.date =  params.date;
         
