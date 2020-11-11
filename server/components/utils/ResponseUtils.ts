@@ -1,6 +1,11 @@
 import Constants from '../Constants';
 
 abstract class ResponseUtils {
+    
+    public static sendFile: Function=(res:any, data:any):void =>{
+        res.type("image/png");
+        res.send(data);
+    }
 
     public static sendCreate:Function = (res: any): void => {
         res.status(201);
